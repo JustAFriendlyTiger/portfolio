@@ -24,8 +24,9 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
         const fd = new FormData();
         fd.append("file", file);
         const res = await fetch("/api/upload", { method: "POST", body: fd });
-        if (!res.ok) throw new Error((await res.json()).error ?? "Upload failed");
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error ?? `Upload failed (${res.status})`);
+        if (!data.url) throw new Error("No URL returned from upload");
         urls.push(data.url);
       }
       onChange([...value, ...urls]);
