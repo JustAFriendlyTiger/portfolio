@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
 import { auth } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
@@ -16,15 +14,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-
-  const originalName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-  const filename = `${Date.now()}-${originalName}`;
-
-  const uploadsDir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(uploadsDir, { recursive: true });
-  await writeFile(path.join(uploadsDir, filename), buffer);
-
-  return NextResponse.json({ url: `/uploads/${filename}` });
+  // Use Vercel Blob in production, local filesystem in development
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const { put } = await import("@vercel/blob");
+    const blob = await put(file.name, file, { access: "public" });
+    return NextResponse.json({ url: blob.url });
+  } else {
+    const { writeFile, mkdir } = await import("fs/promises");
+    const path = await import("path");
+    const originalName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const filename = `${Date.now()}-${originalName}`;
+    const uploadsDir = path.join(process.cwd(), "public", "uploads");
+    await mkdir(uploadsDir, { recursive: true });
+    const bytes = await file.arrayBuffer();
+    await writeFile(path.join(uploadsDir, filename), Buffer.from(bytes));
+    return NextResponse.json({ url: `/uploads/${filename}` });
+  }
 }
