@@ -15,6 +15,10 @@ export default async function SiteConfigPage() {
     heroName: config.heroName ?? "",
     heroTagline: config.heroTagline ?? "",
     heroImage: config.heroImage ?? "",
+    resumeUrl: config.resumeUrl ?? "",
+    contactEmail: config.contactEmail ?? "",
+    contactLinkedIn: config.contactLinkedIn ?? "",
+    contactGitHub: config.contactGitHub ?? "",
   };
 
   return (
@@ -28,7 +32,7 @@ export default async function SiteConfigPage() {
         </a>
         <h1 className="text-2xl font-bold text-white mt-4">Site Config</h1>
         <p className="text-zinc-500 text-sm mt-1">
-          Hero section — name, tagline, and profile photo.
+          Hero, resume link, and contact info.
         </p>
       </div>
 

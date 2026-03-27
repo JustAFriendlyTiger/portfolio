@@ -43,3 +43,20 @@ export interface SiteConfig {
   key: string;
   value: string;
 }
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  body: string;
+  tags: string; // JSON string: string[]
+  published: boolean;
+  date: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ParsedBlogPost extends Omit<BlogPost, "tags"> {
+  parsedTags: string[];
+}

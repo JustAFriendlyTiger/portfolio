@@ -10,9 +10,10 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminPage() {
-  const projects = await prisma.project.findMany({
-    orderBy: { date: "desc" },
-  });
+  const [projects, blogPosts] = await Promise.all([
+    prisma.project.findMany({ orderBy: { date: "desc" } }),
+    prisma.blogPost.findMany({ orderBy: { date: "desc" }, take: 5 }),
+  ]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16">
@@ -40,23 +41,64 @@ export default async function AdminPage() {
       </div>
 
       {/* Quick links to other admin sections */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-        <Link
-          href="/admin/about"
-          className="block p-4 bg-zinc-900 border border-zinc-800 rounded-xl hover:border-zinc-600 transition-colors"
-        >
-          <p className="text-white font-medium text-sm">About Sections</p>
-          <p className="text-zinc-500 text-xs mt-1">Edit the About Me page content</p>
-        </Link>
-        <Link
-          href="/admin/site-config"
-          className="block p-4 bg-zinc-900 border border-zinc-800 rounded-xl hover:border-zinc-600 transition-colors"
-        >
-          <p className="text-white font-medium text-sm">Site Config</p>
-          <p className="text-zinc-500 text-xs mt-1">Edit hero name, tagline, and photo</p>
-        </Link>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-10">
+        {[
+          { href: "/admin/about", title: "About Sections", desc: "Edit the About Me page content" },
+          { href: "/admin/site-config", title: "Site Config", desc: "Hero, resume link, contact info" },
+          { href: "/admin/blog", title: "Blog Posts", desc: "Write & manage blog posts" },
+          { href: "/admin/skills", title: "Skills & Tools", desc: "Configure the skills section" },
+          { href: "/admin/timeline", title: "Timeline", desc: "Academic & experience history" },
+        ].map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="block p-4 bg-zinc-900 border border-zinc-800 rounded-xl hover:border-zinc-600 transition-colors"
+          >
+            <p className="text-white font-medium text-sm">{link.title}</p>
+            <p className="text-zinc-500 text-xs mt-1">{link.desc}</p>
+          </Link>
+        ))}
       </div>
 
+      {/* Blog posts recent */}
+      {blogPosts.length > 0 && (
+        <div className="mb-10">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-white">Recent Blog Posts</h2>
+            <Link href="/admin/blog" className="text-sm text-zinc-400 hover:text-white transition-colors">
+              View all →
+            </Link>
+          </div>
+          <div className="border border-zinc-800 rounded-xl overflow-hidden">
+            {blogPosts.map((post) => (
+              <div
+                key={post.id}
+                className="flex items-center justify-between px-5 py-3 border-b border-zinc-800/50 last:border-0 hover:bg-zinc-900/30 transition-colors"
+              >
+                <div>
+                  <p className="text-sm text-white">{post.title}</p>
+                  <p className="text-xs font-mono text-zinc-500 mt-0.5">{formatDate(post.date)}</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  {post.published ? (
+                    <span className="text-xs text-emerald-400">Published</span>
+                  ) : (
+                    <span className="text-xs text-zinc-600">Draft</span>
+                  )}
+                  <Link
+                    href={`/admin/blog/edit/${post.id}`}
+                    className="text-xs text-zinc-400 hover:text-white transition-colors"
+                  >
+                    Edit
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Projects table */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-semibold text-white">Projects</h2>
         <span className="text-zinc-500 text-sm">{projects.length} total</span>
@@ -74,18 +116,10 @@ export default async function AdminPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-zinc-800 bg-zinc-900/50">
-                <th className="text-left px-6 py-3 text-zinc-400 font-medium">
-                  Title
-                </th>
-                <th className="text-left px-6 py-3 text-zinc-400 font-medium hidden sm:table-cell">
-                  Tags
-                </th>
-                <th className="text-left px-6 py-3 text-zinc-400 font-medium hidden md:table-cell">
-                  Date
-                </th>
-                <th className="text-left px-6 py-3 text-zinc-400 font-medium hidden sm:table-cell">
-                  Featured
-                </th>
+                <th className="text-left px-6 py-3 text-zinc-400 font-medium">Title</th>
+                <th className="text-left px-6 py-3 text-zinc-400 font-medium hidden sm:table-cell">Tags</th>
+                <th className="text-left px-6 py-3 text-zinc-400 font-medium hidden md:table-cell">Date</th>
+                <th className="text-left px-6 py-3 text-zinc-400 font-medium hidden sm:table-cell">Featured</th>
                 <th className="px-6 py-3" />
               </tr>
             </thead>

@@ -27,6 +27,30 @@ export default async function Navbar() {
           >
             Projects
           </Link>
+          <Link
+            href="/blog"
+            className="text-sm text-zinc-400 hover:text-white transition-colors"
+          >
+            Blog
+          </Link>
+          <Link
+            href="/resume"
+            className="text-sm text-zinc-400 hover:text-white transition-colors"
+          >
+            Resume
+          </Link>
+          <Link
+            href="/tools"
+            className="text-sm text-zinc-400 hover:text-white transition-colors hidden sm:block"
+          >
+            Tools
+          </Link>
+          <Link
+            href="/contact"
+            className="text-sm text-zinc-400 hover:text-white transition-colors hidden sm:block"
+          >
+            Contact
+          </Link>
 
           {session ? (
             <>

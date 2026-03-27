@@ -17,6 +17,10 @@ export async function updateSiteConfig(formData: FormData) {
     { key: "heroName", value: (formData.get("heroName") as string) ?? "" },
     { key: "heroTagline", value: (formData.get("heroTagline") as string) ?? "" },
     { key: "heroImage", value: (formData.get("heroImage") as string) ?? "" },
+    { key: "resumeUrl", value: (formData.get("resumeUrl") as string) ?? "" },
+    { key: "contactEmail", value: (formData.get("contactEmail") as string) ?? "" },
+    { key: "contactLinkedIn", value: (formData.get("contactLinkedIn") as string) ?? "" },
+    { key: "contactGitHub", value: (formData.get("contactGitHub") as string) ?? "" },
   ];
 
   for (const { key, value } of entries) {
@@ -28,5 +32,7 @@ export async function updateSiteConfig(formData: FormData) {
   }
 
   revalidatePath("/");
+  revalidatePath("/resume");
+  revalidatePath("/contact");
   redirect("/admin/site-config");
 }
