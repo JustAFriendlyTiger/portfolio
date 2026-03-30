@@ -40,7 +40,9 @@ export default async function ResumePage() {
 
   const resumeUrl = config.resumeUrl ?? null;
   const skills = parseJson<SkillCategory[]>(config.skills, []);
-  const timeline = parseJson<TimelineEvent[]>(config.timeline, []);
+  const timeline = parseJson<TimelineEvent[]>(config.timeline, []).sort(
+    (a, b) => parseInt(b.year) - parseInt(a.year)
+  );
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16">
