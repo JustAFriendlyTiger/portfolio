@@ -40,8 +40,9 @@ export default async function ResumePage() {
 
   const resumeUrl = config.resumeUrl ?? null;
   const skills = parseJson<SkillCategory[]>(config.skills, []);
+  const extractYear = (s: string) => parseInt(s.match(/\d{4}/)?.[0] ?? "0");
   const timeline = parseJson<TimelineEvent[]>(config.timeline, []).sort(
-    (a, b) => parseInt(b.year) - parseInt(a.year)
+    (a, b) => extractYear(b.year) - extractYear(a.year)
   );
 
   return (
