@@ -21,6 +21,7 @@ export async function updateSiteConfig(formData: FormData) {
     { key: "contactEmail", value: (formData.get("contactEmail") as string) ?? "" },
     { key: "contactLinkedIn", value: (formData.get("contactLinkedIn") as string) ?? "" },
     { key: "contactGitHub", value: (formData.get("contactGitHub") as string) ?? "" },
+    { key: "projectsBannerVisible", value: formData.get("projectsBannerVisible") === "on" ? "true" : "false" },
   ];
 
   for (const { key, value } of entries) {
@@ -32,6 +33,7 @@ export async function updateSiteConfig(formData: FormData) {
   }
 
   revalidatePath("/");
+  revalidatePath("/projects");
   revalidatePath("/resume");
   revalidatePath("/contact");
   redirect("/admin/site-config");

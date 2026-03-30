@@ -12,6 +12,7 @@ interface SiteConfigFormProps {
     contactEmail: string;
     contactLinkedIn: string;
     contactGitHub: string;
+    projectsBannerVisible: boolean;
   };
   action: (formData: FormData) => Promise<void>;
 }
@@ -124,6 +125,23 @@ export default function SiteConfigForm({ initial, action }: SiteConfigFormProps)
             className={inputClass}
             placeholder="https://github.com/yourhandle"
           />
+        </div>
+      </div>
+
+      {/* Projects banner */}
+      <div className="space-y-3 pt-4 border-t border-zinc-800">
+        <h2 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider">Projects Page</h2>
+        <div className="flex items-center gap-3">
+          <input
+            id="projectsBannerVisible"
+            name="projectsBannerVisible"
+            type="checkbox"
+            defaultChecked={initial.projectsBannerVisible}
+            className="w-4 h-4 accent-amber-500 cursor-pointer"
+          />
+          <label htmlFor="projectsBannerVisible" className="text-sm text-zinc-400 cursor-pointer">
+            Show &quot;portfolio is being updated&quot; banner
+          </label>
         </div>
       </div>
 

@@ -19,6 +19,7 @@ export default async function SiteConfigPage() {
     contactEmail: config.contactEmail ?? "",
     contactLinkedIn: config.contactLinkedIn ?? "",
     contactGitHub: config.contactGitHub ?? "",
+    projectsBannerVisible: config.projectsBannerVisible !== "false",
   };
 
   return (
