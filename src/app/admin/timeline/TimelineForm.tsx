@@ -7,6 +7,7 @@ interface TimelineEvent {
   title: string;
   description: string;
   type: "education" | "work" | "competition" | "project";
+  current?: boolean;
 }
 
 interface TimelineFormProps {
@@ -30,7 +31,7 @@ export default function TimelineForm({ initial, action }: TimelineFormProps) {
     setEvents(events.filter((_, idx) => idx !== i));
   }
 
-  function update(i: number, field: keyof TimelineEvent, value: string) {
+  function update(i: number, field: keyof TimelineEvent, value: string | boolean) {
     setEvents(events.map((e, idx) => (idx === i ? { ...e, [field]: value } : e)));
   }
 
@@ -93,6 +94,18 @@ export default function TimelineForm({ initial, action }: TimelineFormProps) {
               value={ev.description}
               onChange={(e) => update(i, "description", e.target.value)}
             />
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id={`current-${i}`}
+              checked={ev.current ?? false}
+              onChange={(e) => update(i, "current", e.target.checked)}
+              className="w-4 h-4 accent-emerald-500 cursor-pointer"
+            />
+            <label htmlFor={`current-${i}`} className="text-xs text-zinc-400 cursor-pointer">
+              Currently active / ongoing
+            </label>
           </div>
           {events.length > 1 && (
             <div className="text-right">

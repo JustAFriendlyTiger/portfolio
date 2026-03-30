@@ -16,6 +16,7 @@ interface TimelineEvent {
   title: string;
   description: string;
   type: "education" | "work" | "competition" | "project";
+  current?: boolean;
 }
 
 function parseJson<T>(raw: string | undefined, fallback: T): T {
@@ -142,7 +143,7 @@ export default async function ResumePage() {
                     <div className="w-2.5 h-2.5 rounded-full bg-zinc-700 border-2 border-zinc-600 z-10" />
                   </div>
                   <div className="flex-1 pb-2">
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <h3 className="text-sm font-medium text-white">
                         {event.title}
                       </h3>
@@ -153,6 +154,11 @@ export default async function ResumePage() {
                       >
                         {event.type}
                       </span>
+                      {event.current && (
+                        <span className="text-xs px-2 py-0.5 rounded-full border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                          Present
+                        </span>
+                      )}
                     </div>
                     {event.description && (
                       <p className="text-sm text-zinc-400">{event.description}</p>
