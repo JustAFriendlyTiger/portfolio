@@ -33,6 +33,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# resume pdf
+*.pdf
+
 # prisma
 prisma/dev.db
 prisma/dev.db-journal
